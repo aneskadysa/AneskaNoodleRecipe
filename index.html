@@ -70,53 +70,40 @@
 
 <!-- ================= SCRIPT SECTION ================= -->
 <script>
-  // IndexedDB Setup dengan requestIdleCallback
-let db;
+  // IndexedDB Setup
+  let db;
+  const request = indexedDB.open("favoritDB", 1);
 
-if ('requestIdleCallback' in window) {
-  requestIdleCallback(() => {
-    const request = indexedDB.open("favoritDB", 1);
+  request.onupgradeneeded = function(event) {
+    db = event.target.result;
+    db.createObjectStore("favorites", { keyPath: "id" });
+  };
 
-    request.onupgradeneeded = function(event) {
-      db = event.target.result;
-      db.createObjectStore("favorites", { keyPath: "id" });
+  request.onsuccess = function(event) {
+    db = event.target.result;
+    showFavoriteNav();
+    setTimeout(restoreFavorites, 500);
+    renderMenu(); // Jalankan saat DB ready
+    renderResep();
+  };
+
+  request.onerror = function(event) {
+    console.error("DB error:", event.target.errorCode);
+  };
+
+  // Tampilkan tombol Favorit di Navbar
+  function showFavoriteNav() {
+    const container = document.getElementById('favorite-nav');
+    const transaction = db.transaction("favorites", "readonly");
+    const store = transaction.objectStore("favorites");
+    const countRequest = store.count();
+
+    countRequest.onsuccess = function() {
+      container.innerHTML = countRequest.result > 0
+        ? `<a href="favorit.html" class="btn btn-outline-light btn-sm">❤︎ Favorit</a>`
+        : '';
     };
-
-    request.onsuccess = function(event) {
-      db = event.target.result;
-      showFavoriteNav();
-      setTimeout(restoreFavorites, 500);
-      renderMenu(); // Jalankan saat DB ready
-      renderResep();
-    };
-
-    request.onerror = function(event) {
-      console.error("DB error:", event.target.errorCode);
-    };
-  });
-} else {
-  // Fallback jika browser tidak support requestIdleCallback
-  setTimeout(() => {
-    const request = indexedDB.open("favoritDB", 1);
-
-    request.onupgradeneeded = function(event) {
-      db = event.target.result;
-      db.createObjectStore("favorites", { keyPath: "id" });
-    };
-
-    request.onsuccess = function(event) {
-      db = event.target.result;
-      showFavoriteNav();
-      setTimeout(restoreFavorites, 500);
-      renderMenu(); // Jalankan saat DB ready
-      renderResep();
-    };
-
-    request.onerror = function(event) {
-      console.error("DB error:", event.target.errorCode);
-    };
-  }, 1000);
-}
+  }
 
   // Restore ikon ❤︎
   function restoreFavorites() {
