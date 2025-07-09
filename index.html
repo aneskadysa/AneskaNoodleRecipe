@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aneska Noodle</title>
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#981b1e" />
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar navbar-expand-lg custom-navbar fixed-top px-4">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white fw-semibold" href="index.html">🍜 Aneska Noodle</a>
+    <div id="favorite-nav" class="ms-auto"></div>
+  </div>
+</nav>
+
+<!-- ================= MENU SECTION ================= -->
+<header class="menu-header text-center py-5">
+  <h1 class="text-red">Menu Kami</h1>
+</header>
+
+<div class="container my-5">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4" id="menu-list">
+    <!-- Menu akan dimuat lewat JS -->
+  </div>
+</div>
+
+<!-- ================= RESEP SECTION ================= -->
+<header class="menu-header text-center py-5">
+  <h1 class="text-red">Resep Kami</h1>
+</header>
+
+<div class="container my-5">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4" id="resep-list">
+    <div class="text-center col-12">Loading resep...</div>
+  </div>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer class="custom-footer text-white py-4 mt-5">
+  <div class="container">
+    <div class="row text-center text-md-start">
+      <div class="col-md-4 mb-4 mb-md-0 d-flex flex-column align-items-center align-items-md-start">
+        <h4 class="fw-bold text-red">🍜 Aneska Noodle</h4>
+        <p class="text-red">Rasa Tradisional, Sentuhan Modern.</p>
+      </div>
+      <div class="col-md-4 mb-4 mb-md-0">
+        <h6 class="fw-bold text-red">ALAMAT</h6>
+        <p class="mb-1 text-red">Jl. Rasa Gurih No. 8, Kel. Enak, Jakarta Selatan</p>
+        <p class="text-red">DKI Jakarta, 12240</p>
+        <a href="https://wa.me/6281234567890" class="btn btn-sm btn-outline-red rounded-pill mt-1">Hubungi Kami</a>
+      </div>
+      <div class="col-md-4">
+        <h6 class="fw-bold text-red">SOSIAL MEDIA</h6>
+        <p class="text-red">@AneskaNoodle</p>
+        <p class="text-red">@aneska.noodle</p>
+        <p class="text-red">@AneskaOfficial</p>
+      </div>
+    </div>
+    <div class="text-center mt-4 small text-red">© 2025 Aneska Noodle</div>
+  </div>
+</footer>
+
+<!-- ================= SCRIPT SECTION ================= -->
+<script>
+  // IndexedDB Setup
+  let db;
+  const request = indexedDB.open("favoritDB", 1);
+
+  request.onupgradeneeded = function(event) {
+    db = event.target.result;
+    db.createObjectStore("favorites", { keyPath: "id" });
+  };
+
+  request.onsuccess = function(event) {
+    db = event.target.result;
+    showFavoriteNav();
+    setTimeout(restoreFavorites, 500);
+    renderMenu(); // Jalankan saat DB ready
+    renderResep();
+  };
+
+  request.onerror = function(event) {
+    console.error("DB error:", event.target.errorCode);
+  };
+
+  // Tampilkan tombol Favorit di Navbar
+  function showFavoriteNav() {
+    const container = document.getElementById('favorite-nav');
+    const transaction = db.transaction("favorites", "readonly");
+    const store = transaction.objectStore("favorites");
+    const countRequest = store.count();
+
+    countRequest.onsuccess = function() {
+      container.innerHTML = countRequest.result > 0
+        ? `<a href="favorit.html" class="btn btn-outline-light btn-sm">❤︎ Favorit</a>`
+        : '';
+    };
+  }
+
+  // Restore ikon ❤︎
+  function restoreFavorites() {
+  const store = db.transaction("favorites", "readonly").objectStore("favorites");
+  store.getAll().onsuccess = function(event) {
+    event.target.result.forEach(item => {
+      const icon = document.querySelector(`.fav-icon[data-id="${item.id}"]`);
+      if (icon) {
+        icon.textContent = '❤︎';
+        icon.classList.add('text-danger');
+      }
+    });
+  };
+} 
+
+  // Handle klik ♡
+  document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('fav-icon')) {
+    const icon = e.target;
+    const rawId = icon.dataset.id;
+    const name = icon.dataset.name;
+    const img = icon.dataset.img;
+
+    const id = rawId; // langsung gunakan rawId
+
+    const tx = db.transaction("favorites", "readwrite");
+    const store = tx.objectStore("favorites");
+
+    store.get(id).onsuccess = function(event) {
+      if (event.target.result) {
+        store.delete(id);
+        icon.textContent = '♡';
+        icon.classList.remove('text-danger'); // hapus warna merah
+      } else {
+        store.add({ id, name, img });
+        icon.textContent = '❤︎';
+        icon.classList.add('text-danger'); // beri warna merah
+      }
+    };
+
+    tx.oncomplete = showFavoriteNav;
+  }
+});
+
+  // Render menu mie
+  function renderMenu() {
+    const noodles = [
+      { id: 'm1', name: "Mie Pedas Mantap", price: "Rp. 25,000", img: "img/mie1.jpg" },
+      { id: 'm2', name: "Mie Ayam Special", price: "Rp. 22,000", img: "img/mie2.jpg" },
+      { id: 'm3', name: "Mie Goreng Nusantara", price: "Rp. 24,000", img: "img/mie3.jpg" },
+      { id: 'm4', name: "Mie Kari Ayam", price: "Rp. 23,000", img: "img/mie4.jpg" },
+      { id: 'm5', name: "Mie Tomyum", price: "Rp. 26,000", img: "img/mie5.jpg" },
+      { id: 'm6', name: "Mie Seafood", price: "Rp. 27,000", img: "img/mie6.jpg" },
+      { id: 'm7', name: "Mie Kuah Santan", price: "Rp. 24,000", img: "img/mie7.jpg" },
+      { id: 'm8', name: "Mie Sayur Sehat", price: "Rp. 20,000", img: "img/mie8.jpg" }
+    ];
+
+    const menuContainer = document.getElementById('menu-list');
+    noodles.forEach(menu => {
+      menuContainer.innerHTML += `
+        <div class="col">
+          <div class="card h-100 shadow-sm border-0">
+            <a href="detail.html?id=${menu.id}">
+              <img src="${menu.img}" class="card-img-top" alt="${menu.name}">
+            </a>
+            <div class="card-body text-start">
+              <h5 class="card-title d-flex justify-content-between align-items-center">
+                ${menu.name}
+                <span class="fav-icon" data-id="${menu.id}" data-name="${menu.name}" data-img="${menu.img}" style="cursor:pointer;">♡</span>
+              </h5>
+              <p class="price">${menu.price}</p>
+            </div>
+          </div>
+        </div>`;
+    });
+  }
+
+  // Render resep dari API
+  function renderResep() {
+    fetch('https://www.themealdb.com/api/json/v1/1/filter.php?c=Pasta')
+      .then(res => res.json())
+      .then(data => {
+        const resepContainer = document.getElementById('resep-list');
+        resepContainer.innerHTML = '';
+
+        if (data.meals) {
+          data.meals.forEach(meal => {
+            resepContainer.innerHTML += `
+              <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                  <a href="detail-resep.html?id=${meal.idMeal}">
+                    <img src="${meal.strMealThumb}" class="card-img-top" alt="${meal.strMeal}">
+                  </a>
+                  <div class="card-body text-start">
+                    <h5 class="card-title d-flex justify-content-between align-items-center">
+                      ${meal.strMeal}
+                      <span class="fav-icon" data-id="${meal.idMeal}" data-name="${meal.strMeal}" data-img="${meal.strMealThumb}" style="cursor:pointer;">♡</span>
+                    </h5>
+                  </div>
+                </div>
+              </div>`;
+          });
+        } else {
+          resepContainer.innerHTML = `<div class="text-center text-danger col-12">Tidak ada resep ditemukan.</div>`;
+        }
+      })
+      .catch(err => {
+        document.getElementById('resep-list').innerHTML = `<div class="text-center text-danger col-12">Gagal memuat data: ${err.message}</div>`;
+      });
+  }
+
+  // Register Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('SW terdaftar:', reg.scope))
+        .catch(err => console.error('SW gagal:', err));
+    });
+  }
+</script>
+
+</body>
+</html>

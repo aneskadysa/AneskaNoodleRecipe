@@ -1,0 +1,250 @@
+/* ================================ */
+/* Font Lokal: Poppins (offline)   */
+/* ================================ */
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* ===================================== */
+/* Font dasar dan pengaturan global body */
+/* ===================================== */
+body {
+  background-color: #fff8f0; /* Warna latar belakang lembut */
+  font-family: 'Poppins', sans-serif; /* Font modern dan mudah dibaca */
+  color: #333; /* Warna teks utama */
+  font-size: 0.95rem; /* Ukuran font standar */
+}
+
+/* ============================= */
+/* Warna latar belakang navbar */
+/* ============================= */
+.custom-navbar {
+  background-color: #981b1e; /* Merah khas Aneska */
+  z-index: 1030;
+}
+
+/* =============================================== */
+/* Header bagian menu (index.html) */
+/* =============================================== */
+.menu-header {
+  background-image: url('../img/bg-pattern.png'); /* Pola latar berulang */
+  background-repeat: repeat;
+  background-color: #f4efe1; /* Warna dasar di balik pola */
+}
+
+/* ============================ */
+/* Judul di dalam menu-header */
+/* ============================ */
+.menu-header h1 {
+  font-size: 2rem; /* Ukuran besar untuk judul */
+  color: #981b1e; /* Warna merah brand */
+  font-weight: 600; /* Tebal sedang */
+}
+
+/* =================================== */
+/* Gaya umum untuk setiap kartu produk */
+/* =================================== */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Animasi saat hover */
+  border: none;
+  border-radius: 8px; /* Sudut membulat */
+}
+
+/* ============================= */
+/* Efek saat hover pada kartu */
+/* ============================= */
+.card:hover {
+  transform: translateY(-5px); /* Kartu naik sedikit */
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15); /* Bayangan lembut */
+}
+
+/* ==================================== */
+/* Gambar di dalam kartu produk mie */
+/* ==================================== */
+.card img {
+  width: 100%; /* Lebar penuh */
+  height: auto;
+  border-radius: 8px 8px 0 0; /* Hanya bagian atas yang membulat */
+}
+
+/* ============================== */
+/* Judul produk di dalam kartu */
+/* ============================== */
+.card-title {
+  font-size: 0.85rem;
+  font-weight: 550;
+  margin-bottom: 0.25rem;
+}
+
+/* ========================= */
+/* Harga mie dalam kartu dan detail */
+/* ========================= */
+.price {
+  color: #c43d4d; /* Warna harga (merah lebih muda) */
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* ======================================= */
+/* Gambar pada halaman detail produk mie */
+/* ======================================= */
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* ============================================== */
+/* Gaya footer (bagian bawah situs Aneska Noodle) */
+/* ============================================== */
+.custom-footer {
+  background-image: url('../img/background-footer.png'); /* Gambar latar belakang footer */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: #981b1e;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===================================================== */
+/* Lapisan putih transparan di atas background footer */
+/* untuk menjaga keterbacaan teks */
+/* ===================================================== */
+.custom-footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.75); /* Transparan putih 75% */
+  z-index: -1;
+}
+
+/* ============================================== */
+/* Warna teks dan link di dalam custom-footer */
+/* ============================================== */
+.custom-footer h4,
+.custom-footer h6,
+.custom-footer p,
+.custom-footer a,
+.custom-footer .small {
+  color: #981b1e;
+}
+
+/* ================================================= */
+/* Tombol dengan border merah untuk kontak via WA */
+/* ================================================= */
+.btn-outline-red {
+  color: #981b1e;
+  background-color: #fff;
+  border: 1.5px solid #981b1e;
+  transition: all 0.3s ease;
+}
+
+/* ============================================== */
+/* Efek hover saat mouse diarahkan ke tombol kontak */
+/* ============================================== */
+.btn-outline-red:hover {
+  background-color: #981b1e;
+  color: #fff;
+  border-color: #981b1e;
+}
+
+/* =================================== */
+/* Gaya spacing untuk detail-resep.html */
+/* =================================== */
+#detail-container {
+  margin-top: 100px; /* Spasi untuk navbar fixed */
+  margin-bottom: 60px;
+}
+
+#detail-container h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #981b1e;
+}
+
+#detail-container h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+#detail-container ul {
+  padding-left: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+#detail-container ul li {
+  margin-bottom: 5px;
+  font-size: 0.95rem;
+}
+
+#detail-container p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* ===================================== */
+/* Tombol Youtube & Kembali di Detail */
+/* ===================================== */
+.detail-buttons .btn {
+  width: 100%;
+  max-width: 220px;
+  display: block;
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Youtube button */
+.detail-buttons .btn-danger {
+  background-color: #981b1e;
+  border-color: #981b1e;
+}
+
+/* Kembali button */
+.detail-buttons .btn-outline-danger {
+  color: #981b1e;
+  border-color: #981b1e;
+}
+
+.detail-buttons .btn-outline-danger:hover {
+  background-color: #981b1e;
+  color: #fff;
+}
+
+/* ================================= */
+/* Responsive tombol di mobile */
+/* ================================= */
+@media (max-width: 768px) {
+  .detail-buttons .btn {
+    width: 100%;
+  }
+}
+
+/* Jarak atas untuk menghindari navbar fixed-top menutupi konten */
+body {
+  padding-top: 64px; 
+}
+

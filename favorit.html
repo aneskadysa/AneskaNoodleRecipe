@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>❤︎ Favorit Anda | Aneska Noodle</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg custom-navbar fixed-top px-4">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white fw-semibold" href="index.html">🍜 Aneska Noodle</a>
+    <a href="index.html" class="btn btn-outline-light btn-sm ms-auto">🍜 Menu</a>
+  </div>
+</nav>
+
+<!-- ======================= -->
+<!-- Bagian Favorit Menu -->
+<!-- ======================= -->
+<header class="menu-header text-center py-5">
+  <h1 class="text-red">Menu Favorit Anda</h1>
+</header>
+<div class="container my-5">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4" id="favorit-menu">
+    <div class="col-12 text-center">Memuat menu favorit...</div>
+  </div>
+</div>
+
+<!-- ======================= -->
+<!-- Bagian Favorit Resep -->
+<!-- ======================= -->
+<header class="menu-header text-center py-5">
+  <h1 class="text-red">Resep Favorit Anda</h1>
+</header>
+<div class="container mt-0 mb-5">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4" id="favorit-resep">
+    <div class="col-12 text-center">Memuat resep favorit...</div>
+  </div>
+</div>
+
+<!-- Script Menampilkan & Hapus Favorit -->
+<script>
+const dbRequest = indexedDB.open("favoritDB", 1);
+
+dbRequest.onsuccess = function(event) {
+  const db = event.target.result;
+  const tx = db.transaction("favorites", "readonly");
+  const store = tx.objectStore("favorites");
+  const getAll = store.getAll();
+
+  getAll.onsuccess = function() {
+    const data = getAll.result;
+    const menuContainer = document.getElementById("favorit-menu");
+    const resepContainer = document.getElementById("favorit-resep");
+
+    menuContainer.innerHTML = "";
+    resepContainer.innerHTML = "";
+
+    const menus = data.filter(item => item.id.startsWith("m"));
+    const reseps = data.filter(item => !item.id.startsWith("m"));
+
+    if (menus.length === 0) {
+      menuContainer.innerHTML = `<div class="col-12 text-center text-danger">Tidak ada menu favorit disimpan.</div>`;
+    } else {
+      menus.forEach(item => {
+        menuContainer.innerHTML += `
+          <div class="col">
+            <div class="card h-100 shadow-sm border-0">
+              <a href="detail.html?id=${item.id}">
+                <img src="${item.img}" class="card-img-top" alt="${item.name}">
+              </a>
+              <div class="card-body text-start">
+                <h5 class="card-title d-flex justify-content-between align-items-center">
+                  ${item.name}
+                  <span class="fav-icon text-danger" style="cursor:pointer;" data-id="${item.id}">❤︎</span>
+                </h5>
+              </div>
+            </div>
+          </div>`;
+      });
+    }
+
+    if (reseps.length === 0) {
+      resepContainer.innerHTML = `<div class="col-12 text-center text-danger">Tidak ada resep favorit disimpan.</div>`;
+    } else {
+      reseps.forEach(item => {
+        resepContainer.innerHTML += `
+          <div class="col">
+            <div class="card h-100 shadow-sm border-0">
+              <a href="detail-resep.html?id=${item.id}">
+                <img src="${item.img}" class="card-img-top" alt="${item.name}">
+              </a>
+              <div class="card-body text-start">
+                <h5 class="card-title d-flex justify-content-between align-items-center">
+                  ${item.name}
+                  <span class="fav-icon text-danger" style="cursor:pointer;" data-id="${item.id}">❤︎</span>
+                </h5>
+              </div>
+            </div>
+          </div>`;
+      });
+    }
+
+    // Tambahkan event listener untuk hapus favorit
+    document.querySelectorAll(".fav-icon").forEach(icon => {
+      icon.addEventListener("click", function() {
+        const id = this.dataset.id;
+        const tx = db.transaction("favorites", "readwrite");
+        const store = tx.objectStore("favorites");
+        store.delete(id);
+
+        tx.oncomplete = () => {
+          location.reload(); // Refresh halaman setelah hapus
+        };
+      });
+    });
+  };
+};
+</script>
+
+</body>
+</html>

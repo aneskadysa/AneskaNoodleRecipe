@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- =============================== -->
+  <!-- Metadata dan link eksternal CSS -->
+  <!-- =============================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detail Menu</title>
+
+  <!--Bootstrap CSS untuk tata letak responsif dan komponen UI -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- File CSS kustom -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#981b1e" />
+
+</head>
+<body>
+
+<!-- ===================================== -->
+<!-- Navbar: Navigasi atas berisi nama brand -->
+<!-- ===================================== -->
+<nav class="navbar navbar-expand-lg custom-navbar fixed-top px-4">
+  <div class="container-fluid">
+    <!-- Link ke halaman utama (index) -->
+    <a class="navbar-brand text-white fw-semibold" href="detail.html">🍜 Aneska Noodle</a>
+  </div>
+</nav>
+
+<!-- ====================================================== -->
+<!-- Bagian Detail Produk: Menampilkan informasi mie secara lengkap -->
+<!-- ====================================================== -->
+<div class="container my-5">
+  <div class="row align-items-center gy-4">
+
+    <!-- ========================================= -->
+    <!-- Kolom kiri: Gambar produk mie ditampilkan -->
+    <!-- ========================================= -->
+    <div class="col-md-6">
+      <img id="product-img" src="" alt="Noodle Image" class="img-fluid rounded shadow-lg w-100" style="max-height: 400px; object-fit: cover;">
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- Kolom kanan: Nama, harga, deskripsi, dan tombol kembali -->
+    <!-- ==================================================== -->
+    <div class="col-md-6">
+      <div class="bg-white p-4 rounded shadow-sm">
+        <h2 id="product-name" class="fw-semibold mb-3 text-dark"></h2>
+        <h5 id="product-price" class="price mb-3"></h5>
+        <p id="product-desc" class="text-muted" style="line-height: 1.6;"></p>
+
+        <!-- Tombol untuk kembali ke halaman menu utama -->
+        <a href="index.html" class="btn btn-outline-danger mt-4">Kembali ke Menu</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- JavaScript: Menampilkan data menu berdasarkan parameter ID -->
+<!-- ======================================================== -->
+<script>
+  // Mengambil parameter ID dari URL
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  // Data lengkap menu mie disimpan dalam objek berdasarkan ID
+  // Data lengkap menu mie disimpan dalam objek berdasarkan ID
+const noodleDetails = {
+  m1: {
+    name: "Mie Pedas Mantap",
+    price: "Rp. 25,000",
+    desc: "Mie Pedas Mantap adalah pilihan terbaik bagi pencinta rasa pedas. Terbuat dari mie kenyal berkualitas tinggi dan disajikan dengan kuah merah menyala yang diperkaya dengan cabai segar, bawang putih, dan bumbu rahasia khas Aneska. Mie ini memberikan sensasi pedas yang membakar lidah namun tetap nikmat. Cocok dinikmati saat cuaca dingin atau ketika ingin tantangan rasa yang menggoda."
+  },
+  m2: {
+    name: "Mie Ayam Special",
+    price: "Rp. 22,000",
+    desc: "Mie Ayam Special kami menyajikan mie lembut dengan taburan potongan ayam berbumbu manis-gurih yang melimpah. Dipadukan dengan minyak ayam aromatik, sawi hijau segar, dan kuah kaldu bening yang kaya rasa. Cocok untuk segala suasana, menu ini membawa cita rasa klasik yang sudah akrab namun tetap istimewa berkat sentuhan khas Aneska."
+  },
+  m3: {
+    name: "Mie Goreng Nusantara",
+    price: "Rp. 24,000",
+    desc: "Nikmati kekayaan rempah-rempah lokal dalam Mie Goreng Nusantara. Menu ini menghadirkan mie goreng yang dimasak dengan bumbu tradisional Indonesia seperti kecap manis, bawang merah, kemiri, dan lada. Dilengkapi dengan telur, ayam suwir, serta irisan kol dan wortel segar untuk cita rasa seimbang antara gurih, manis, dan sedikit pedas. Lezat dan mengenyangkan!"
+  },
+  m4: {
+    name: "Mie Kari Ayam",
+    price: "Rp. 23,000",
+    desc: "Mie Kari Ayam hadir dengan kuah kari kuning yang kaya rempah-rempah seperti kunyit, jahe, dan ketumbar. Potongan ayam empuk berpadu dengan mie kenyal menciptakan harmoni rasa yang menggoda. Menu ini cocok untuk kamu yang menyukai makanan berkuah dan berbumbu kuat namun tetap lembut di lidah."
+  },
+  m5: {
+    name: "Mie Tomyum",
+    price: "Rp. 26,000",
+    desc: "Rasakan sensasi Thailand dalam semangkuk Mie Tomyum. Kuahnya yang asam pedas dibuat dari kaldu seafood, serai, daun jeruk, dan perasan jeruk nipis yang menyegarkan. Terdapat isian jamur, udang, dan mie pipih yang menyerap semua cita rasa dengan sempurna. Cocok bagi kamu yang suka petualangan rasa yang eksotis."
+  },
+  m6: {
+    name: "Mie Seafood",
+    price: "Rp. 27,000",
+    desc: "Mie Seafood Aneska adalah perpaduan antara kesegaran laut dan kenikmatan mie gurih. Menggunakan udang dan cumi segar yang ditumis ringan dengan bawang putih dan saus tiram, lalu disajikan di atas mie yang direbus sempurna. Tambahan sayuran hijau membuat hidangan ini terasa seimbang dan menggugah selera."
+  },
+  m7: {
+    name: "Mie Kuah Santan",
+    price: "Rp. 24,000",
+    desc: "Kelezatan kuah santan yang gurih dan lembut menjadi ciri khas dari Mie Kuah Santan ini. Kuahnya dimasak dengan santan kental, serai, daun salam, dan sedikit cabai untuk sentuhan hangat. Mie lembut dan isian ayam suwir serta potongan tahu goreng membuat hidangan ini unik dan cocok untuk kamu yang ingin rasa comfort food ala rumahan."
+  },
+  m8: {
+    name: "Mie Sayur Sehat",
+    price: "Rp. 20,000",
+    desc: "Mie Sayur Sehat adalah pilihan ideal bagi pecinta makanan sehat. Disajikan dengan berbagai sayur segar seperti wortel, brokoli, jagung muda, dan sawi, serta mie bebas pewarna buatan. Kuah kaldu bening dari rebusan ayam dan sayur memberikan rasa ringan namun tetap gurih. Menyehatkan tanpa mengorbankan kelezatan."
+  }
+};
+
+  // Jika data ditemukan berdasarkan ID, tampilkan kontennya
+  const data = noodleDetails[id];
+
+  if (data) {
+    document.getElementById("product-name").textContent = data.name;
+    document.getElementById("product-price").textContent = data.price;
+    document.getElementById("product-desc").textContent = data.desc;
+    document.getElementById("product-img").src = `img/mie${id.substring(1)}.jpg`;
+  } else {
+    // Jika tidak ditemukan, tampilkan pesan error
+    document.querySelector('.container').innerHTML = "<h3>Produk tidak ditemukan.</h3>";
+  }
+</script>
+
+<!-- ============================================ -->
+<!-- Footer: Informasi bisnis di bagian paling bawah -->
+<!-- ============================================ -->
+<footer class="custom-footer text-white py-4 mt-5">
+  <div class="container">
+    <div class="row text-center text-md-start">
+      
+      <!-- ============================ -->
+      <!-- Kolom 1: Logo dan slogan -->
+      <!-- ============================ -->
+      <div class="col-md-4 mb-4 mb-md-0 d-flex flex-column align-items-center align-items-md-start">
+        <h4 class="fw-bold text-red">🍜 Aneska Noodle</h4>
+        <p class="text-red">Rasa Tradisional, Sentuhan Modern.</p>
+      </div>
+
+      <!-- ============================ -->
+      <!-- Kolom 2: Alamat dan kontak -->
+      <!-- ============================ -->
+      <div class="col-md-4 mb-4 mb-md-0">
+        <h6 class="fw-bold text-red">ALAMAT</h6>
+        <p class="mb-1 text-red">Jl. Rasa Gurih No. 8, Kel. Enak, Jakarta Selatan</p>
+        <p class="text-red">DKI Jakarta, 12240</p>
+        <!-- Tombol WhatsApp untuk menghubungi -->
+        <a href="https://wa.me/6281234567890" class="btn btn-sm btn-outline-red rounded-pill mt-1">Hubungi Kami</a>
+      </div>
+
+      <!-- ============================ -->
+      <!-- Kolom 3: Akun sosial media -->
+      <!-- ============================ -->
+      <div class="col-md-4">
+        <h6 class="fw-bold text-red">SOSIAL MEDIA</h6>
+        <p class="text-red"><i class="bi bi-facebook"></i> @AneskaNoodle</p>
+        <p class="text-red"><i class="bi bi-instagram"></i> @aneska.noodle</p>
+        <p class="text-red"><i class="bi bi-twitter"></i> @AneskaOfficial</p>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="text-center mt-4 small text-red">© 2025 Aneska Noodle</div>
+  </div>
+</footer>
+
+<script>
+  // Cek apakah browser support service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      // Daftarkan service worker
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => {
+          console.log('Service Worker terdaftar dengan scope:', registration.scope);
+        })
+        .catch(error => {
+          console.error('Service Worker gagal terdaftar:', error);
+        });
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detail Resep</title>
+
+  <!-- ======================== -->
+  <!-- Link ke CSS & Font Lokal -->
+  <!-- ======================== -->
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar navbar-expand-lg custom-navbar fixed-top px-4">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white fw-semibold" href="index.html">🍜 Aneska Noodle</a>
+  </div>
+</nav>
+
+<!-- ============== DETAIL RESEP ============== -->
+<!-- Isi akan dimuat dinamis dari API berdasarkan ID -->
+<div class="container my-5" id="detail-container">
+  <p class="text-center">Loading detail resep...</p>
+</div>
+
+<!-- ============== SCRIPT DINAMIS ============== -->
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  if (id) {
+    fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
+      .then(res => res.json())
+      .then(data => {
+        const meal = data.meals[0];
+        const container = document.getElementById('detail-container');
+
+        // Bangun list bahan
+        let ingredients = '';
+        for (let i = 1; i <= 20; i++) {
+          const ing = meal[`strIngredient${i}`];
+          const meas = meal[`strMeasure${i}`];
+          if (ing && ing.trim()) {
+            ingredients += `<li>${ing} - ${meas}</li>`;
+          }
+        }
+
+        // Tampilkan isi resep
+        container.innerHTML = `
+          <div class="row align-items-start gy-4">
+            <div class="col-md-6">
+              <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="img-fluid rounded shadow-lg w-100" style="max-height: 400px; object-fit: cover;">
+            </div>
+            <div class="col-md-6">
+              <div class="bg-white p-4 rounded shadow-sm">
+                <h2 class="fw-semibold mb-3 text-dark">${meal.strMeal}</h2>
+                <h5 class="text-muted">Bahan-bahan:</h5>
+                <ul>${ingredients}</ul>
+                <h5 class="text-muted mt-4">Instruksi:</h5>
+                <p style="line-height: 1.6;">${meal.strInstructions}</p>
+
+                ${meal.strYoutube ? `
+                <h5 class="text-muted mt-4">Video Tutorial:</h5>
+                <div class="detail-buttons">
+                  <a href="${meal.strYoutube}" target="_blank" class="btn btn-danger">Tonton di YouTube</a>
+                  <a href="index.html#resep-list" class="btn btn-outline-danger">Kembali ke Resep</a>
+                </div>` : `
+                <div class="detail-buttons mt-4">
+                  <a href="index.html#resep-list" class="btn btn-outline-danger">Kembali ke Resep</a>
+                </div>`}
+              </div>
+            </div>
+          </div>
+        `;
+      })
+      .catch(err => {
+        document.getElementById('detail-container').innerHTML = `<p class="text-danger text-center">Gagal memuat data: ${err.message}</p>`;
+      });
+  } else {
+    document.getElementById('detail-container').innerHTML = `<p class="text-danger text-center">ID resep tidak ditemukan.</p>`;
+  }
+</script>
+
+<!-- ================= FOOTER ================= -->
+<footer class="custom-footer text-white py-4 mt-5">
+  <div class="container">
+    <div class="row text-center text-md-start">
+      <div class="col-md-4 mb-4 mb-md-0 d-flex flex-column align-items-center align-items-md-start">
+        <h4 class="fw-bold text-red">🍜 Aneska Noodle</h4>
+        <p class="text-red">Rasa Tradisional, Sentuhan Modern.</p>
+      </div>
+      <div class="col-md-4 mb-4 mb-md-0">
+        <h6 class="fw-bold text-red">ALAMAT</h6>
+        <p class="mb-1 text-red">Jl. Rasa Gurih No. 8, Kel. Enak, Jakarta Selatan</p>
+        <p class="text-red">DKI Jakarta, 12240</p>
+        <a href="https://wa.me/6281234567890" class="btn btn-sm btn-outline-red rounded-pill mt-1">Hubungi Kami</a>
+      </div>
+      <div class="col-md-4">
+        <h6 class="fw-bold text-red">SOSIAL MEDIA</h6>
+        <p class="text-red"><i class="bi bi-facebook"></i> @AneskaNoodle</p>
+        <p class="text-red"><i class="bi bi-instagram"></i> @aneska.noodle</p>
+        <p class="text-red"><i class="bi bi-twitter"></i> @AneskaOfficial</p>
+      </div>
+    </div>
+    <div class="text-center mt-4 small text-red">© 2025 Aneska Noodle</div>
+  </div>
+</footer>
+
+</body>
+</html>
