@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="css/style.css">
 
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+
   <meta name="theme-color" content="#981b1e" />
 </head>
 <body>
@@ -17,7 +19,7 @@
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top px-4">
   <div class="container-fluid">
     <a class="navbar-brand text-white fw-semibold" href="index.html">🍜 Aneska Noodle</a>
-    <div id="favorite-nav" class="ms-auto"></div>
+    <div id="favorite-nav" class="ms-auto d-flex gap-2"></div>
   </div>
 </nav>
 
@@ -87,23 +89,58 @@
     renderResep();
   };
 
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    showFavoriteNav(); // panggil ulang agar tombol "Add to Home" muncul
+  });
+  
   request.onerror = function(event) {
     console.error("DB error:", event.target.errorCode);
   };
 
   // Tampilkan tombol Favorit di Navbar
   function showFavoriteNav() {
-    const container = document.getElementById('favorite-nav');
-    const transaction = db.transaction("favorites", "readonly");
-    const store = transaction.objectStore("favorites");
-    const countRequest = store.count();
+  const container = document.getElementById('favorite-nav');
+  const transaction = db.transaction("favorites", "readonly");
+  const store = transaction.objectStore("favorites");
+  const countRequest = store.count();
 
-    countRequest.onsuccess = function() {
-      container.innerHTML = countRequest.result > 0
-        ? `<a href="favorit.html" class="btn btn-outline-light btn-sm">❤︎ Favorit</a>`
-        : '';
-    };
-  }
+  countRequest.onsuccess = function() {
+    let buttons = '';
+
+    // Kalau PWA bisa diinstal, munculkan tombol add to home
+    if (deferredPrompt) {
+      buttons += `<button id="install-btn" class="btn btn-outline-light btn-sm me-2">➕ Add to Home</button>`;
+    }
+
+    // Kalau ada favorit, munculkan tombol favorit
+    if (countRequest.result > 0) {
+      buttons += `<a href="favorit.html" class="btn btn-outline-light btn-sm">❤︎ Favorit</a>`;
+    }
+
+    container.innerHTML = buttons;
+
+    // Tambahkan event listener untuk tombol install
+    const installBtn = document.getElementById('install-btn');
+    if (installBtn) {
+      installBtn.addEventListener('click', () => {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(choiceResult => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('👍 User accepted A2HS prompt');
+          } else {
+            console.log('👎 User dismissed A2HS prompt');
+          }
+          deferredPrompt = null;
+          installBtn.remove(); // hilangkan tombol setelah install
+        });
+      });
+    }
+  };
+}
 
   // Restore ikon ❤︎
   function restoreFavorites() {

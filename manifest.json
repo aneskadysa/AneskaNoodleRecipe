@@ -1,7 +1,7 @@
 {
   "name": "Aneska Noodle",
   "short_name": "Aneska",
-  "start_url": "/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#fff8f0",
   "theme_color": "#981b1e",
@@ -15,6 +15,49 @@
       "src": "img/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Favorit Anda",
+      "short_name": "Favorit",
+      "description": "Lihat daftar menu dan resep favorit Anda",
+      "url": "favorit.html",
+      "icons": [
+        {
+          "src": "img/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Menu Kami",
+      "short_name": "Menu",
+      "description": "Lihat katalog mie Aneska",
+      "url": "index.html#menu-list",
+      "icons": [
+        {
+          "src": "img/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/home.png",
+      "sizes": "414x896",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Beranda (Desktop)"
+    },
+    {
+      "src": "screenshots/home.png",
+      "sizes": "414x896",
+      "type": "image/png",
+      "label": "Beranda (Mobile)"
     }
   ]
 }
