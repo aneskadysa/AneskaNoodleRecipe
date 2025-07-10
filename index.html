@@ -91,10 +91,35 @@
 
   let deferredPrompt;
 
+  // Saat event 'beforeinstallprompt' muncul
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    showFavoriteNav(); // panggil ulang agar tombol "Add to Home" muncul
+
+    // Tampilkan tombol
+    const floatBtn = document.getElementById('a2hs-float-btn');
+    floatBtn.classList.remove('d-none');
+
+    floatBtn.addEventListener('click', () => {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choiceResult => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('✅ Aplikasi dipasang');
+        } else {
+          console.log('❌ Pengguna batal pasang');
+        }
+        deferredPrompt = null;
+        floatBtn.remove();
+      });
+    });
+  });
+
+  // Jika sudah pernah prompt, tapi reload halaman → coba tampilkan lagi jika mungkin
+  window.addEventListener('load', () => {
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      // Aplikasi sudah di-install, sembunyikan tombol
+      document.getElementById('a2hs-float-btn').remove();
+    }
   });
   
   request.onerror = function(event) {
@@ -110,11 +135,6 @@
 
   countRequest.onsuccess = function() {
     let buttons = '';
-
-    // Kalau PWA bisa diinstal, munculkan tombol add to home
-    if (deferredPrompt) {
-      buttons += `<button id="install-btn" class="btn btn-outline-light btn-sm me-2">➕ Add to Home</button>`;
-    }
 
     // Kalau ada favorit, munculkan tombol favorit
     if (countRequest.result > 0) {
@@ -261,6 +281,11 @@
     });
   }
 </script>
+
+<!-- ================= A2HS FLOATING BUTTON ================= -->
+<button id="a2hs-float-btn" class="btn btn-theme rounded-pill px-3 py-2 d-none shadow" title="Tambahkan ke layar utama">
+  ➕ Add to Home
+</button>
 
 </body>
 </html>

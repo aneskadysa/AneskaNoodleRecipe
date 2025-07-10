@@ -257,3 +257,21 @@ body {
   position: relative;
 }
 
+#a2hs-float-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1050;
+  font-size: 14px;
+}
+
+.btn-theme {
+  background-color: #981b1e;
+  color: white;
+}
+
+.btn-theme:hover {
+  background-color: #7d1619; /* versi lebih gelap saat hover */
+  color: white;
+}
+
